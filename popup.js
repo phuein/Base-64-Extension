@@ -1,16 +1,17 @@
 var out = document.getElementById("output"), //all global because its UI
-    copybtn = document.getElementById("copy"),
+    stringIn = document.getElementById("string-input"),
+    // copybtn = document.getElementById("copy"),
     to64 = document.getElementById("to"),
     from64 = document.getElementById("from"),
-    tobtn = document.getElementById("convert"),
-    input = document.getElementById("file"),
+    // tobtn = document.getElementById("convert"),
+    // input = document.getElementById("file"),
     canvas = document.getElementById("cnv"),
-    download = document.getElementById("download"),
-    clear = document.getElementById("clear"),
-    selector = document.getElementById("fileTypeSelector"),
-    label = document.getElementById("label"),
-    fileName = document.getElementById("fileName"),
-    file_type = document.getElementById("file_type"),
+    // download = document.getElementById("download"),
+    // clear = document.getElementById("clear"),
+    // selector = document.getElementById("fileTypeSelector"),
+    // label = document.getElementById("label"),
+    // fileName = document.getElementById("fileName"),
+    // file_type = document.getElementById("file_type"),
     state, string, img, aud, fr, file, type, b64Type, created, fileType;
 var setting = 0;
 var ctx = canvas.getContext("2d");
@@ -19,49 +20,49 @@ to.style.borderColor = "red";
 
 to.addEventListener('click', () => {
   setting = 0;
-  tobtn.style.display = "none";
-  copybtn.style.display = "inline";
-  download.style.display = "none";
-  clear.style.display = "none";
-  selector.style.display = "none";
-  label.style.display = "inline-block";
-  fileName.style.display = "inline-block";
-  file_type.style.display = "none";
+  // tobtn.style.display = "none";
+  // copybtn.style.display = "inline";
+  // download.style.display = "none";
+  // clear.style.display = "none";
+  // selector.style.display = "none";
+  // label.style.display = "inline-block";
+  // fileName.style.display = "inline-block";
+  // file_type.style.display = "none";
   to.style.borderColor = "red";
   from64.style.borderColor = "";
 });
 from64.addEventListener('click', () => {
   setting = 1;
-  tobtn.style.display = "inline";
-  copybtn.style.display = "none";
-  download.style.display = "inline-block";
-  clear.style.display = "inline";
-  selector.style.display = "inline";
-  label.style.display = "none";
-  fileName.style.display = "none";
-  file_type.style.display = "inline-block";
+  // tobtn.style.display = "inline";
+  // copybtn.style.display = "none";
+  // download.style.display = "inline-block";
+  // clear.style.display = "inline";
+  // selector.style.display = "inline";
+  // label.style.display = "none";
+  // fileName.style.display = "none";
+  // file_type.style.display = "inline-block";
   from64.style.borderColor = "red";
   to.style.borderColor = "";
 });
 
-clear.addEventListener('click', () => {
-  out.value = null;
-});
-selector.addEventListener('change', () => {
-  b64Type = this.value;
-});
-copybtn.addEventListener('click', () => {
-  out.select();
-  document.execCommand('copy');
-});
-download.addEventListener('click', function() {
-    downloadCanvas(this);
-}, false);
+// clear.addEventListener('click', () => {
+//   out.value = null;
+// });
+// selector.addEventListener('change', () => {
+//   b64Type = this.value;
+// });
+// copybtn.addEventListener('click', () => {
+//   out.select();
+//   document.execCommand('copy');
+// });
+// download.addEventListener('click', function() {
+//     downloadCanvas(this);
+// }, false);
 
-input.addEventListener("change", convert);
-tobtn.addEventListener("click", find);
+// input.addEventListener("change", convert);
+// tobtn.addEventListener("click", find);
 
-document.getElementById("clear-storage").addEventListener('click', clearStorage);
+// document.getElementById("clear-storage").addEventListener('click', clearStorage);
 var string_input = document.getElementById("string-input");
 string_input.addEventListener('keyup', e => convertText(e)); //when typing
 string_input.addEventListener('change', e => convertText(e)); //for pasting in text
@@ -243,27 +244,35 @@ function clearStorage() {
 }
 
 (function () {
-  chrome.storage.local.get(['key'], function(result) {
+  // Default to start with converting from b64.
+  from64.click();
+  stringIn.focus();
+
+  chrome.storage.local.get(['key'], function (result) {
     if (result.key !== undefined) {
-      function load() {
-        out.value = result.key;
-        setting = 1;
-        find();
-        setting = 0;
-      }
-      
-      function confirmBox(callback) {
-        var confirmDialogue = document.querySelector(".confirm");
-        confirmDialogue.style.display = "block";
-        confirmDialogue.children[1].addEventListener('click', () => {
-          confirmDialogue.style.display = "none";
-          callback();
-        });
-        confirmDialogue.children[2].addEventListener('click', () => { confirmDialogue.style.display = "none" });
-      }
-      //ask to load what's in ls
-      if (result.key.length < 500000) load(); //smallish file, don't worry about it.
-      else confirmBox(load); //will take awhile to load
+      out.value = result.key;
+
+      // function load() {
+      //   out.value = result.key;
+      //   setting = 1;
+      //   find();
+      //   setting = 0;
+      // }
     }
   });
+
+  //     function confirmBox(callback) {
+  //       var confirmDialogue = document.querySelector(".confirm");
+  //       confirmDialogue.style.display = "block";
+  //       confirmDialogue.children[1].addEventListener('click', () => {
+  //         confirmDialogue.style.display = "none";
+  //         callback();
+  //       });
+  //       confirmDialogue.children[2].addEventListener('click', () => { confirmDialogue.style.display = "none" });
+  //     }
+  //     //ask to load what's in ls
+  //     if (result.key.length < 500000) load(); //smallish file, don't worry about it.
+  //     else confirmBox(load); //will take awhile to load
+  //   }
+  // });
 }());
