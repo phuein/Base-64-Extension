@@ -4,7 +4,7 @@
   "name": "Base64 Encoder/Decoder Modified",
   "short_name": "Base64",
   "description": "Encodes and decodes media to and from Base64.",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "permissions": [
     "storage",
     "clipboardWrite",

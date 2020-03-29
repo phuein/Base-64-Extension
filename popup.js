@@ -76,8 +76,25 @@ from64.addEventListener('click', () => {
 // tobtn.addEventListener("click", find);
 
 // document.getElementById("clear-storage").addEventListener('click', clearStorage);
-string_input.addEventListener('input', e => convertText(e));
 
+string_input.addEventListener('paste', e => {
+  // Delay to let paste finish.
+  setTimeout(() => convertText(e), 100);
+});
+
+string_input.addEventListener('keypress', e => {
+  // Submit on Enter.
+  if (e.key === 'Enter') {
+    convertText(e);
+  }
+});
+
+// Clear memory if result is deleted manually.
+out.addEventListener('input', e => {
+  if (e.target.value === '') {
+    clearStorage();
+  }
+});
 
 function convertText(e) {
   // Use event object or string value.
