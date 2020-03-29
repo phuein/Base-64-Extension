@@ -6,7 +6,9 @@
   "description": "Encodes and decodes media to and from Base64.",
   "version": "1.2.1",
   "permissions": [
-    "storage"
+    "storage",
+    "clipboardWrite",
+    "clipboardRead"
   ],
   "icons": {
     "16":  "icon16.png",

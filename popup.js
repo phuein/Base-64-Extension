@@ -1,5 +1,6 @@
+var string_input = document.getElementById("string-input");
+
 var out = document.getElementById("output"), //all global because its UI
-    stringIn = document.getElementById("string-input"),
     // copybtn = document.getElementById("copy"),
     to64 = document.getElementById("to"),
     from64 = document.getElementById("from"),
@@ -19,6 +20,12 @@ var ctx = canvas.getContext("2d");
 to.style.borderColor = "red";
 
 to.addEventListener('click', () => {
+  // Convert result if pressed while active.
+  if (setting === 0) {
+    convertText(out.value);
+    return;
+  }
+
   setting = 0;
   // tobtn.style.display = "none";
   // copybtn.style.display = "inline";
@@ -32,6 +39,12 @@ to.addEventListener('click', () => {
   from64.style.borderColor = "";
 });
 from64.addEventListener('click', () => {
+  // Convert result if pressed while active.
+  if (setting === 1) {
+    convertText(out.value);
+    return;
+  }
+
   setting = 1;
   // tobtn.style.display = "inline";
   // copybtn.style.display = "none";
@@ -63,15 +76,27 @@ from64.addEventListener('click', () => {
 // tobtn.addEventListener("click", find);
 
 // document.getElementById("clear-storage").addEventListener('click', clearStorage);
-var string_input = document.getElementById("string-input");
-string_input.addEventListener('keyup', e => convertText(e)); //when typing
-string_input.addEventListener('change', e => convertText(e)); //for pasting in text
+string_input.addEventListener('input', e => convertText(e));
 
 
 function convertText(e) {
-  if (!setting) out.value = window.btoa(e.target.value);
-  else out.value = window.atob(e.target.value);
+  // Use event object or string value.
+  let v;
+  try {
+    v = e.target.value;
+  } catch (err) {
+    v = e;
+  }
+
+  if (!setting) {
+    out.value = window.btoa(v);
+  } else {
+    out.value = window.atob(v);
+  }
   store(out.value);
+
+  out.select();
+  document.execCommand('copy');
 }
 
 function convert() {
@@ -246,7 +271,7 @@ function clearStorage() {
 (function () {
   // Default to start with converting from b64.
   from64.click();
-  stringIn.focus();
+  string_input.focus();
 
   chrome.storage.local.get(['key'], function (result) {
     if (result.key !== undefined) {
